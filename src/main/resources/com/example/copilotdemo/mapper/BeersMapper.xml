@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.copilotdemo.mapper.BeersMapper">
+
+  <select id="selectBeersList" resultType="com.example.copilotdemo.model.Beers">
+    <!-- 分页查询所有数据，并增加查询条件 名称，描述，标语，食物搭配迷糊搜索，当条件不存在时不参加条件查询-->
+    SELECT * FROM beers
+    <trim prefix="WHERE" suffixOverrides="AND |OR ">
+      <if test="name != null and name != ''">
+        name LIKE CONCAT('%', #{name}, '%')  AND
+      </if>
+      <if test="description != null and description != ''">
+       description LIKE CONCAT('%', #{description}, '%')  AND
+      </if>
+      <if test="tagline != null and tagline != ''">
+        tagline LIKE CONCAT('%', #{tagline}, '%') AND
+      </if>
+      <if test="food_pairing != null and food_pairing != ''">
+       food_pairing LIKE CONCAT('%', #{food_pairing}, '%')  AND
+      </if>
+    </trim>
+    ORDER BY id desc LIMIT #{offset}, #{limit}
+  </select>
+
+  <select id="selectBeersById" resultType="com.example.copilotdemo.model.Beers">
+    SELECT * FROM beers WHERE id = #{id}
+  </select>
+
+  <insert id="insertBeers">
+    INSERT INTO `food`.`beers` (`name`, `tagline`, `first_brewed`, `description`, `image_url`, `price`, `abv`, `ibu`, `target_fg`, `target_og`, `ebc`, `srm`, `ph`, `attenuation_level`, `volume`, `boil_volume`, `method`, `ingredients`, `food_pairing`, `brewers_tips`, `contributed_by`) VALUES (#{name}, #{tagline}, #{first_brewed}, #{description}, #{image_url}, #{price}, #{abv}, #{ibu}, #{target_fg}, #{target_og}, #{ebc}, #{srm}, #{ph}, #{attenuation_level}, #{volume}, #{boil_volume}, #{method}, #{ingredients}, #{food_pairing}, #{brewers_tips}, #{contributed_by});
+  </insert>
+
+  <update id="updateBeers">
+    UPDATE `food`.`beers` SET
+    <trim  suffixOverrides=",">
+        <if test="name != null and name != ''">
+            `name` = #{name},
+        </if>
+        <if test="tagline != null and tagline != ''">
+            `tagline` = #{tagline},
+        </if>
+        <if test="first_brewed != null and first_brewed != ''">
+            `first_brewed` = #{first_brewed},
+        </if>
+        <if test="description != null and description != ''">
+            `description` = #{description},
+        </if>
+        <if test="image_url != null and image_url != ''">
+            `image_url` = #{image_url},
+        </if>
+        <if test="price != null and price != ''">
+            `price` = #{price},
+        </if>
+        <if test="abv != null and abv != ''">
+            `abv` = #{abv},
+        </if>
+        <if test="ibu != null and ibu != ''">
+            `ibu` = #{ibu},
+        </if>
+        <if test="target_fg != null and target_fg != ''">
+            `target_fg` = #{target_fg},
+        </if>
+        <if test="target_og != null and target_og != ''">
+            `target_og` = #{target_og},
+        </if>
+        <if test="ebc != null and ebc != ''">
+            `ebc` = #{ebc},
+        </if>
+        <if test="srm != null and srm != ''">
+            `srm` = #{srm},
+        </if>
+        <if test="ph != null and ph != ''">
+            `ph` = #{ph},
+        </if>
+        <if test="attenuation_level != null and attenuation_level != ''">
+            `attenuation_level` = #{attenuation_level},
+        </if>
+        <if test="volume != null and volume != ''">
+            `volume` = #{volume},
+        </if>
+        <if test="boil_volume != null and boil_volume != ''">
+            `boil_volume` = #{boil_volume},
+        </if>
+        <if test="method != null and method != ''">
+            `method` = #{method},
+        </if>
+        <if test="ingredients != null and ingredients != ''">
+            `ingredients` = #{ingredients},
+        </if>
+    </trim>
+    WHERE `id` = #{id};
+  </update>
+
+    <delete id="deleteBeers">
+        DELETE FROM `food`.`beers` WHERE `id` = #{id};
+    </delete>
+
+</mapper>

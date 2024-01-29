@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.copilotdemo.mapper.SchoolMapper">
+
+<!--  编写查询 mybatis 分页xml语句配置，使得只有不为空的学校名称,地区，对接人，手机号字段才会参与到sql语句中-->
+  <select id="list" resultType="com.example.copilotdemo.model.School">
+    select * from school
+    <where>
+      <if test="school != null and school != ''">
+        and school like '%#{school}%'
+      </if>
+      <if test="area != null and area != ''">
+        and area like '%#{area}%'
+      </if>
+      <if test="contact != null and contact != ''">
+        and contact like '%#{contact}%'
+      </if>
+      <if test="phone != null and phone != ''">
+        and phone like '%#{phone}%'
+      </if>
+    </where>
+    order by create_time desc limit #{start}, #{size};
+  </select>
+
+<!--  帮我编写一条sql语句，插入数据到school表中，直接生成 mybatis xml 数据 -->
+  <insert id="insert" parameterType="com.example.copilotdemo.model.School">
+    insert into school (school, area, contact, phone, create_time, update_time)
+    values (#{school}, #{area}, #{contact}, #{phone}, now(), now());
+    </insert>
+
+<!--  帮我编写一条sql语句，更新school表中的数据，直接生成 mybatis xml 数据 -->
+    <update id="update" parameterType="com.example.copilotdemo.model.School">
+        update school
+        <set>
+        <if test="school != null and school != ''">
+            school = #{school},
+        </if>
+        <if test="area != null and area != ''">
+            area = #{area},
+        </if>
+        <if test="contact != null and contact != ''">
+            contact = #{contact},
+        </if>
+        <if test="phone != null and phone != ''">
+            phone = #{phone},
+        </if>
+        update_time = now()
+        </set>
+        where id = #{id};
+    </update>
+
+<!--  帮我编写一条sql语句，删除school表中的数据，直接生成 mybatis xml 数据 -->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from school where id = #{id};
+    </delete>
+</mapper>
